@@ -65,14 +65,14 @@ public class TestGrid01 {
                     selectedCell = null;
 //                    if (e.getX() >= xOffset && e.getY() >= yOffset) {
 
-                        int column = (e.getX()/* - xOffset*/) / cellWidth;
-                        int row = (e.getY()/* - yOffset*/) / cellHeight;
+                    int column = (e.getX()/* - xOffset*/) / cellWidth;
+                    int row = (e.getY()/* - yOffset*/) / cellHeight;
 
-                        if (column >= 0 && row >= 0 && column < columnCount && row < rowCount) {
+                    if (column >= 0 && row >= 0 && column < columnCount && row < rowCount) {
 
-                            selectedCell = new Point(column, row);
+                        selectedCell = new Point(column, row);
 
-                        }
+                    }
 
 //                    }
                     repaint();
