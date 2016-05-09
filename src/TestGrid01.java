@@ -20,6 +20,7 @@ public class TestGrid01 {
     public static void main(String[] args) {
         new TestGrid01();
     }
+    public enum MouseState {NO_BUTTON, LEFT_BUTTON, RIGHT_BUTTON}
 
     public TestGrid01() {
         EventQueue.invokeLater(new Runnable() {
@@ -47,6 +48,8 @@ public class TestGrid01 {
         private int rowCount = 5;
         private List<Rectangle> cells;
         private Point selectedCell;
+        private boolean leftClick = false;
+        private MouseState mouseState = MouseState.NO_BUTTON;
 
         public TestPane() {
             cells = new ArrayList<>(columnCount * rowCount);
@@ -54,13 +57,14 @@ public class TestGrid01 {
             mouseHandler = new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    System.out.println("fuk");
                     if(e.getButton() == MouseEvent.BUTTON1)
                     {
+                        mouseState = MouseState.LEFT_BUTTON;
                         System.out.println("Detected Mouse Left Click!");
                     }
                     else if(e.getButton() == MouseEvent.BUTTON3)
                     {
+                        mouseState = MouseState.RIGHT_BUTTON;
                         System.out.println("Detected Mouse Right Click!");
                     }
 
@@ -92,9 +96,6 @@ public class TestGrid01 {
                     {
                         System.out.println("Detected Mouse Left Click!");
                     }
-//                    System.out.println("lol");
-                    repaint();
-
                 }
             };
             addMouseListener(mouseHandler);
@@ -144,7 +145,15 @@ public class TestGrid01 {
 
                 int index = selectedCell.x + (selectedCell.y * columnCount);
                 Rectangle cell = cells.get(index);
-                g2d.setColor(Color.BLUE);
+                if(mouseState == MouseState.NO_BUTTON){
+                    g2d.setColor(Color.BLUE);
+                }else if(mouseState == MouseState.LEFT_BUTTON){
+                    g2d.setColor(Color.GREEN);
+                    mouseState = MouseState.NO_BUTTON;
+                }else if(mouseState == MouseState.RIGHT_BUTTON){
+                    g2d.setColor(Color.RED);
+                    mouseState = MouseState.NO_BUTTON;
+                }
                 g2d.fill(cell);
 
             }
