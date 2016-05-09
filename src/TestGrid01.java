@@ -20,7 +20,10 @@ public class TestGrid01 {
     public static void main(String[] args) {
         new TestGrid01();
     }
+
     public enum MouseState {NO_BUTTON, LEFT_BUTTON, RIGHT_BUTTON}
+
+    public enum ProgramState {ADD_START, ADD_END, ADD_OBSTACLES, PATH_FINDING}
 
     public TestGrid01() {
         EventQueue.invokeLater(new Runnable() {
@@ -46,13 +49,16 @@ public class TestGrid01 {
 
         private int columnCount = 5;
         private int rowCount = 5;
+
         private List<Rectangle> cells;
         private Point selectedCell;
-        private boolean leftClick = false;
         private MouseState mouseState = MouseState.NO_BUTTON;
+        private ProgramState programState = ProgramState.ADD_START;
+        private Grid grid;
 
         public TestPane() {
             cells = new ArrayList<>(columnCount * rowCount);
+            grid = new Grid(columnCount, rowCount);
             MouseAdapter mouseHandler;
             mouseHandler = new MouseAdapter() {
                 @Override
@@ -107,9 +113,10 @@ public class TestGrid01 {
             return new Dimension(200, 200);
         }
 
+        //I don't know when this function is called
         @Override
         public void invalidate() {
-            cells.clear();
+            grid.clearRectangles();
             selectedCell = null;
             super.invalidate();
         }
@@ -128,42 +135,28 @@ public class TestGrid01 {
             int xOffset = (width - (columnCount * cellWidth)) / 2;
             int yOffset = (height - (rowCount * cellHeight)) / 2;
 
-            if (cells.isEmpty()) {
-                for (int row = 0; row < rowCount; row++) {
-                    for (int col = 0; col < columnCount; col++) {
-                        Rectangle cell = new Rectangle(
-                                xOffset + (col * cellWidth),
-                                yOffset + (row * cellHeight),
-                                cellWidth,
-                                cellHeight);
-                        cells.add(cell);
-                    }
-                }
+            if (grid.getGrid().get(0).getRectangle() == null) {
+                grid.initRectangle(cellWidth, cellHeight, xOffset, yOffset);
             }
 
             if (selectedCell != null) {
 
                 int index = selectedCell.x + (selectedCell.y * columnCount);
-                Rectangle cell = cells.get(index);
                 if(mouseState == MouseState.NO_BUTTON){
                     g2d.setColor(Color.BLUE);
                 }else if(mouseState == MouseState.LEFT_BUTTON){
                     g2d.setColor(Color.GREEN);
+                    grid.setStart(index);
                     mouseState = MouseState.NO_BUTTON;
                 }else if(mouseState == MouseState.RIGHT_BUTTON){
                     g2d.setColor(Color.RED);
                     mouseState = MouseState.NO_BUTTON;
                 }
-                g2d.fill(cell);
+                grid.fillCells(g2d);
 
             }
 
-            g2d.setColor(Color.GRAY);
-            for (Rectangle cell : cells) {
-                g2d.draw(cell);
-            }
-
-            g2d.dispose();
+//            g2d.dispose();
         }
     }
 }
