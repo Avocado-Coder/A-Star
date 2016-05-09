@@ -53,6 +53,22 @@ public class TestGrid01 {
             MouseAdapter mouseHandler;
             mouseHandler = new MouseAdapter() {
                 @Override
+                public void mousePressed(MouseEvent e) {
+                    System.out.println("fuk");
+                    if(e.getButton() == MouseEvent.BUTTON1)
+                    {
+                        System.out.println("Detected Mouse Left Click!");
+                    }
+                    else if(e.getButton() == MouseEvent.BUTTON3)
+                    {
+                        System.out.println("Detected Mouse Right Click!");
+                    }
+
+                    repaint();
+
+                }
+
+                @Override
                 public void mouseMoved(MouseEvent e) {
                     Point point = e.getPoint();
 
@@ -63,7 +79,6 @@ public class TestGrid01 {
                     int cellHeight = height / rowCount;
 
                     selectedCell = null;
-//                    if (e.getX() >= xOffset && e.getY() >= yOffset) {
 
                     int column = (e.getX()/* - xOffset*/) / cellWidth;
                     int row = (e.getY()/* - yOffset*/) / cellHeight;
@@ -73,12 +88,16 @@ public class TestGrid01 {
                         selectedCell = new Point(column, row);
 
                     }
-
-//                    }
+                    if(e.getButton() == MouseEvent.BUTTON1)
+                    {
+                        System.out.println("Detected Mouse Left Click!");
+                    }
+//                    System.out.println("lol");
                     repaint();
 
                 }
             };
+            addMouseListener(mouseHandler);
             addMouseMotionListener(mouseHandler);
         }
 
