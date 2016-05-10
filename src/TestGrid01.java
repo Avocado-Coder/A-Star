@@ -1,3 +1,5 @@
+import org.jcp.xml.dsig.internal.MacOutputStream;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,10 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
 public class TestGrid01 {
 
@@ -21,7 +20,7 @@ public class TestGrid01 {
         new TestGrid01();
     }
 
-    public enum MouseState {NO_BUTTON, LEFT_BUTTON, RIGHT_BUTTON}
+    public enum MouseState {NO_BUTTON, LEFT_BUTTON, RIGHT_BUTTON, MIDDLE_BUTTON}
 
     public enum ProgramState {ADD_START, ADD_END, ADD_OBSTACLES, PATH_FINDING}
 
@@ -63,15 +62,12 @@ public class TestGrid01 {
             mouseHandler = new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if(e.getButton() == MouseEvent.BUTTON1)
-                    {
+                    if(SwingUtilities.isLeftMouseButton(e)) {
                         mouseState = MouseState.LEFT_BUTTON;
-                        System.out.println("Detected Mouse Left Click!");
-                    }
-                    else if(e.getButton() == MouseEvent.BUTTON3)
-                    {
+                    } else if(SwingUtilities.isRightMouseButton(e)) {
                         mouseState = MouseState.RIGHT_BUTTON;
-                        System.out.println("Detected Mouse Right Click!");
+                    } else if(SwingUtilities.isMiddleMouseButton(e)){
+                        mouseState = MouseState.MIDDLE_BUTTON;
                     }
 
                     repaint();
@@ -113,7 +109,7 @@ public class TestGrid01 {
             return new Dimension(200, 200);
         }
 
-        //I don't know when this function is called
+        //I don't know when this function is called...seems like it's called when resize is happening
         @Override
         public void invalidate() {
             grid.clearRectangles();
@@ -142,21 +138,19 @@ public class TestGrid01 {
             if (selectedCell != null) {
 
                 int index = selectedCell.x + (selectedCell.y * columnCount);
-                if(mouseState == MouseState.NO_BUTTON){
-                    g2d.setColor(Color.BLUE);
+                if(mouseState == MouseState.MIDDLE_BUTTON){
+                    grid.setObstacle(index);
+                    mouseState = MouseState.NO_BUTTON;
                 }else if(mouseState == MouseState.LEFT_BUTTON){
-                    g2d.setColor(Color.GREEN);
                     grid.setStart(index);
                     mouseState = MouseState.NO_BUTTON;
                 }else if(mouseState == MouseState.RIGHT_BUTTON){
-                    g2d.setColor(Color.RED);
+                    grid.setEnd(index);
                     mouseState = MouseState.NO_BUTTON;
                 }
-                grid.fillCells(g2d);
-
             }
-
-//            g2d.dispose();
+            grid.fillCells(g2d);
+            g2d.dispose();
         }
     }
 }

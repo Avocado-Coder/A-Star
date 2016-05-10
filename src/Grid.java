@@ -55,6 +55,14 @@ public class Grid {
         grid.get(index).setCellState(CellInfo.CellState.START);
     }
 
+    public void setEnd(int index){
+        grid.get(index).setCellState(CellInfo.CellState.END);
+    }
+
+    public void setObstacle(int index){
+        grid.get(index).setCellState(CellInfo.CellState.OBSTACLE);
+    }
+
     public void clearRectangles(){
         for(CellInfo cellInfo : grid){
             cellInfo.setRectangle(null);
@@ -64,6 +72,13 @@ public class Grid {
     public void fillCells(Graphics2D g2d){
         for(CellInfo cellInfo : grid){
             if(cellInfo.getCellState() == CellInfo.CellState.START){
+                g2d.setColor(Color.GREEN);
+                g2d.fill(cellInfo.getRectangle());
+            }else if(cellInfo.getCellState() == CellInfo.CellState.END){
+                g2d.setColor(Color.RED);
+                g2d.fill(cellInfo.getRectangle());
+            }else if(cellInfo.getCellState() == CellInfo.CellState.OBSTACLE){
+                g2d.setColor(Color.BLACK);
                 g2d.fill(cellInfo.getRectangle());
             }
         }
