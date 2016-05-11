@@ -14,7 +14,7 @@ public class AStar {
         closed = new ArrayList<>();
     }
 
-    public void findPath(Grid grid, Cell start, Cell end){
+    public Cell findPath(Grid grid, Cell start, Cell end){
         open.add(start);
         //while lowest rank in open not goal
         while(open.peek() != end){
@@ -35,13 +35,14 @@ public class AStar {
                 analyzeNeighbour(current, grid.getCell(row + 1, column), start, end);
             }
         }
+        return end;
     }
 
     private void analyzeNeighbour(Cell current, Cell neighbour, Cell start, Cell end){
-        int dx = Math.abs(neighbour.getRow() - start.getRow());
+        double dx = Math.abs(neighbour.getRow() - start.getRow());
         double dy = Math.abs(neighbour.getColumn() - start.getColumn());
         //TODO: change movement cost after (i.e. obstacles should be a huge value or they shouldn't even be analysed)
-        Double cost = dx + dy + 1;
+        Double cost = dx + dy + neighbour.getState().getCost();
         //remove existing neighbour that sucks and replace with better path
         if(open.contains(neighbour) && cost < neighbour.getG()){
             open.remove(neighbour);
@@ -63,7 +64,9 @@ public class AStar {
     private class AStarCompare implements Comparator<Cell> {
 
         public int compare(Cell a, Cell b) {
-            return new Double(a.getH()).compareTo(b.getH());
+            if (a.getF() > b.getF()) return 1;
+            if (a.getF() > b.getF()) return -1;
+            return 0;
         }
     }
 }

@@ -3,7 +3,18 @@
 import java.awt.*;
 
 public class Cell {
-    public enum State {EMPTY, START, END, PATH, OBSTACLE}
+    public enum State {
+        EMPTY(1), START(0), END(0), OBSTACLE(Integer.MAX_VALUE);
+        private int cost;
+
+        State(int cost) {
+            this.cost = cost;
+        }
+
+        public int getCost() {
+            return cost;
+        }
+    }
     private State state;
     private Rectangle rectangle;
     private int column;
@@ -16,6 +27,7 @@ public class Cell {
     Cell(){
         state = State.EMPTY;
         g = Double.MAX_VALUE;
+//        f = Double.MAX_VALUE;
     }
 
     public State getState() {
