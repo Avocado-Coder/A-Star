@@ -1,13 +1,4 @@
-import org.jcp.xml.dsig.internal.MacOutputStream;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -36,18 +27,36 @@ public class TestGrid01 {
                 JFrame frame = new JFrame("Testing");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLayout(new BorderLayout());
-                frame.add(new TestPane());
+                frame.add(new GridPanel(), BorderLayout.NORTH);
+                frame.add(new ButtonPanel(), BorderLayout.SOUTH);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
+                frame.getRootPane().setDefaultButton(null);
             }
         });
     }
 
-    public class TestPane extends JPanel {
+    public class ButtonPanel extends JPanel{
+        public ButtonPanel(){
+            JButton startSim = new JButton("Start Simulation");
+            startSim.setFocusPainted(false);
+            JButton stopSim = new JButton("Stop Simulation");
+            stopSim.setFocusPainted(false);
+            add(startSim);
+            add(stopSim);
+        }
+//
+//        @Override
+//        public Dimension getPreferredSize() {
+//            return new Dimension(50, 200);
+//        }
+    }
 
-        private int columnCount = 5;
-        private int rowCount = 5;
+    public class GridPanel extends JPanel {
+
+        private int columnCount = 25;
+        private int rowCount = 25;
 
         private List<Rectangle> cells;
         private Point selectedCell;
@@ -55,7 +64,7 @@ public class TestGrid01 {
         private ProgramState programState = ProgramState.ADD_START;
         private Grid grid;
 
-        public TestPane() {
+        public GridPanel() {
             cells = new ArrayList<>(columnCount * rowCount);
             grid = new Grid(columnCount, rowCount);
             MouseAdapter mouseHandler;
@@ -106,7 +115,7 @@ public class TestGrid01 {
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(200, 200);
+            return new Dimension(800, 800);
         }
 
         //I don't know when this function is called...seems like it's called when resize is happening

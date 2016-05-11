@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Grid {
-    private List<CellInfo> grid;
+    private List<Cell> grid;
     private int columns;
     private int rows;
 
     //default number of columns and rows is 5
     Grid(){
-        this.columns = 5;
-        this.rows = 5;
+        this.columns = 25;
+        this.rows = 25;
         initState();
     }
 
@@ -26,9 +26,11 @@ public class Grid {
         grid = new ArrayList<>();
         for(int row = 0; row < rows; row++){
             for(int col = 0; col< columns; col++){
-                CellInfo cellInfo = new CellInfo();
-                cellInfo.setCellState(CellInfo.CellState.EMPTY);
-                grid.add(cellInfo);
+                Cell cell = new Cell();
+                cell.setState(Cell.State.EMPTY);
+                cell.setRow(row);
+                cell.setColumn(col);
+                grid.add(cell);
             }
         }
     }
@@ -47,46 +49,59 @@ public class Grid {
         }
     }
 
-    public List<CellInfo> getGrid() {
+    public List<Cell> getGrid() {
         return grid;
     }
 
     public void setStart(int index){
-        grid.get(index).setCellState(CellInfo.CellState.START);
+        grid.get(index).setState(Cell.State.START);
     }
 
     public void setEnd(int index){
-        grid.get(index).setCellState(CellInfo.CellState.END);
+        grid.get(index).setState(Cell.State.END);
     }
 
     public void setObstacle(int index){
-        grid.get(index).setCellState(CellInfo.CellState.OBSTACLE);
+        grid.get(index).setState(Cell.State.OBSTACLE);
+    }
+
+    public Cell getCell(int row, int col){
+        int index = col + (row * columns);
+        return grid.get(index);
     }
 
     public void clearRectangles(){
-        for(CellInfo cellInfo : grid){
-            cellInfo.setRectangle(null);
+        for(Cell cell : grid){
+            cell.setRectangle(null);
         }
     }
 
     public void fillCells(Graphics2D g2d){
-        for(CellInfo cellInfo : grid){
-            if(cellInfo.getCellState() == CellInfo.CellState.START){
+        for(Cell cell : grid){
+            if(cell.getState() == Cell.State.START){
                 g2d.setColor(Color.GREEN);
-                g2d.fill(cellInfo.getRectangle());
-            }else if(cellInfo.getCellState() == CellInfo.CellState.END){
+                g2d.fill(cell.getRectangle());
+            }else if(cell.getState() == Cell.State.END){
                 g2d.setColor(Color.RED);
-                g2d.fill(cellInfo.getRectangle());
-            }else if(cellInfo.getCellState() == CellInfo.CellState.OBSTACLE){
+                g2d.fill(cell.getRectangle());
+            }else if(cell.getState() == Cell.State.OBSTACLE){
                 g2d.setColor(Color.BLACK);
-                g2d.fill(cellInfo.getRectangle());
+                g2d.fill(cell.getRectangle());
             }
         }
 
         //draw the edges of grid
         g2d.setColor(Color.GRAY);
-        for(CellInfo cellInfo : grid){
-            g2d.draw(cellInfo.getRectangle());
+        for(Cell cell : grid){
+            g2d.draw(cell.getRectangle());
         }
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
+    public int getRows() {
+        return rows;
     }
 }
