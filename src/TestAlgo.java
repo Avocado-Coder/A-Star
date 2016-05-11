@@ -1,5 +1,5 @@
-/**
- * Created by ste on 10/05/16.
- */
 public class TestAlgo {
+    public static void main(String[] args){
+        
+    }
 }

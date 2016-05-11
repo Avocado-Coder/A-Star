@@ -8,6 +8,15 @@ public class Cell {
     private Rectangle rectangle;
     private int column;
     private int row;
+    private double g;  // g is distance from the source
+    private double h;  // h is the heuristic of destination.
+    private double f;  // f = g + h
+    private Cell parent;
+
+    Cell(){
+        state = State.EMPTY;
+        g = Double.MAX_VALUE;
+    }
 
     public State getState() {
         return state;
@@ -39,5 +48,37 @@ public class Cell {
 
     public void setRow(int row) {
         this.row = row;
+    }
+
+    public double getG() {
+        return g;
+    }
+
+    public void setG(Double g) {
+        this.g = g;
+    }
+
+    public double getH() {
+        return h;
+    }
+
+    public void setH(double h) {
+        this.h = h;
+    }
+
+    public double getF() {
+        return f;
+    }
+
+    public void setF(double f) {
+        this.f = f;
+    }
+
+    public Cell getParent() {
+        return parent;
+    }
+
+    public void setParent(Cell parent) {
+        this.parent = parent;
     }
 }

@@ -1,40 +1,16 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 /**
  * Created by ste on 10/05/16.
  */
 public class AStar {
-    private PriorityQueue<Cell> open;
+    private Queue<Cell> open;
     private List<Cell> closed;
-    /*
-OPEN = priority queue containing START
-CLOSED = empty set --means visited!!
-OPEN U CLOSED means all visited nodes
-we don't need a variable to keep track of visited nodes!!
-while lowest rank in OPEN is not the GOAL:
-  current = remove lowest rank item from OPEN
-  add current to CLOSED
-  for neighbors of current:
-    cost = g(current) + movementcost(current, neighbor)
-    if neighbor in OPEN and cost less than g(neighbor):
-      remove neighbor from OPEN, because new path is better
-    if neighbor in CLOSED and cost less than g(neighbor): ⁽²⁾
-      remove neighbor from CLOSED
-    if neighbor not in OPEN and neighbor not in CLOSED:
-      set g(neighbor) to cost
-      add neighbor to OPEN
-      set priority queue rank to g(neighbor) + h(neighbor)
-      set neighbor's parent to current
-
-reconstruct reverse path from goal to start
-by following parent pointers
-     */
 
     //initialize open and closed
     AStar(){
-        open = new PriorityQueue<>();
+        Comparator<Cell> comparator = new AStarCompare();
+        open = new PriorityQueue<>(10, comparator);
         closed = new ArrayList<>();
     }
 
@@ -47,19 +23,47 @@ by following parent pointers
             int column = current.getColumn();
             int row = current.getRow();
             if(column - 1 >= 0){
-
+                analyzeNeighbour(current, grid.getCell(row, column - 1), start, end);
             }
             if(column + 1 < grid.getColumns()){
-
+                analyzeNeighbour(current, grid.getCell(row, column + 1), start, end);
             }
             if(row - 1 >= 0){
-
+                analyzeNeighbour(current, grid.getCell(row - 1, column), start, end);
             }
             if(row + 1 < grid.getRows()){
-
+                analyzeNeighbour(current, grid.getCell(row + 1, column), start, end);
             }
         }
     }
 
+    private void analyzeNeighbour(Cell current, Cell neighbour, Cell start, Cell end){
+        int dx = Math.abs(neighbour.getRow() - start.getRow());
+        double dy = Math.abs(neighbour.getColumn() - start.getColumn());
+        //TODO: change movement cost after (i.e. obstacles should be a huge value or they shouldn't even be analysed)
+        Double cost = dx + dy + 1;
+        //remove existing neighbour that sucks and replace with better path
+        if(open.contains(neighbour) && cost < neighbour.getG()){
+            open.remove(neighbour);
+        }
+        if(closed.contains(neighbour) && cost < neighbour.getG()){
+            closed.remove(neighbour);
+        }
+        if(!open.contains(neighbour) && !closed.contains(neighbour)){
+            neighbour.setG(cost);
+            open.add(neighbour);
+            int dxEnd = Math.abs(neighbour.getRow() - end.getRow());
+            int dyEnd = Math.abs(neighbour.getColumn() - end.getColumn());
+            neighbour.setH(dxEnd + dyEnd);
+            neighbour.setF(neighbour.getH() + neighbour.getG());
+            neighbour.setParent(current);
+        }
+    }
 
+    private class AStarCompare implements Comparator<Cell> {
+
+        public int compare(Cell a, Cell b) {
+            return new Double(a.getH()).compareTo(b.getH());
+        }
+    }
 }
