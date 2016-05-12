@@ -61,7 +61,7 @@ public class SwingVisual {
                     AStar aStar = new AStar();
                     Cell end = aStar.findPath(grid);
                     Stack<Cell> stackPath = new Stack<>();
-                    while(end != null){
+                    while(end != grid.getStart()){
                         stackPath.push(end);
                         end = end.getParent();
                     }

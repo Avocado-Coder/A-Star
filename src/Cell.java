@@ -27,7 +27,8 @@ public class Cell {
     Cell(){
         state = State.EMPTY;
         g = Double.MAX_VALUE;
-//        f = Double.MAX_VALUE;
+        h = Double.MAX_VALUE;
+        f = Double.MAX_VALUE;
     }
 
     public State getState() {
