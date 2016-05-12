@@ -8,6 +8,9 @@ public class Grid {
     private List<Cell> grid;
     private int columns;
     private int rows;
+    private Cell start;
+    private Cell end;
+    private Cell path;
 
     //default number of columns and rows is 5
     Grid(){
@@ -54,11 +57,21 @@ public class Grid {
     }
 
     public void setStart(int index){
-        grid.get(index).setState(Cell.State.START);
+        if(start != null){
+            this.getStart().setState(Cell.State.EMPTY);
+        }
+        Cell newStart = grid.get(index);
+        newStart.setState(Cell.State.START);
+        start = newStart;
     }
 
     public void setEnd(int index){
-        grid.get(index).setState(Cell.State.END);
+        if(end != null){
+            this.getEnd().setState(Cell.State.EMPTY);
+        }
+        Cell newEnd = grid.get(index);
+        newEnd.setState(Cell.State.END);
+        end = newEnd;
     }
 
     public void setObstacle(int index){
@@ -87,6 +100,9 @@ public class Grid {
             }else if(cell.getState() == Cell.State.OBSTACLE){
                 g2d.setColor(Color.BLACK);
                 g2d.fill(cell.getRectangle());
+            }else if(cell.getState() == Cell.State.PATH){
+                g2d.setColor(Color.BLUE);
+                g2d.fill(cell.getRectangle());
             }
         }
 
@@ -103,5 +119,22 @@ public class Grid {
 
     public int getRows() {
         return rows;
+    }
+
+    public Cell getStart() {
+        return start;
+    }
+
+    public Cell getEnd() {
+        return end;
+    }
+
+    public Cell getPath() {
+        return path;
+    }
+
+    public void setPath(Cell path) {
+        this.path = path;
+        path.setState(Cell.State.PATH);
     }
 }

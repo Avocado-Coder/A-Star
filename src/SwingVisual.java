@@ -1,21 +1,28 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 
-public class TestGrid01 {
+public class SwingVisual {
 
     public static void main(String[] args) {
-        new TestGrid01();
+        new SwingVisual();
     }
 
     public enum MouseState {NO_BUTTON, LEFT_BUTTON, RIGHT_BUTTON, MIDDLE_BUTTON}
 
     public enum ProgramState {ADD_START, ADD_END, ADD_OBSTACLES, PATH_FINDING}
 
-    public TestGrid01() {
+    public SwingVisual() {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -24,11 +31,13 @@ public class TestGrid01 {
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 }
 
+                Grid grid = new Grid();
+
                 JFrame frame = new JFrame("Testing");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLayout(new BorderLayout());
-                frame.add(new GridPanel(), BorderLayout.NORTH);
-                frame.add(new ButtonPanel(), BorderLayout.SOUTH);
+                frame.add(new GridPanel(grid), BorderLayout.NORTH);
+                frame.add(new ButtonPanel(grid), BorderLayout.SOUTH);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
@@ -38,19 +47,40 @@ public class TestGrid01 {
     }
 
     public class ButtonPanel extends JPanel{
-        public ButtonPanel(){
+        public ButtonPanel(Grid grid){
             JButton startSim = new JButton("Start Simulation");
             startSim.setFocusPainted(false);
             JButton stopSim = new JButton("Stop Simulation");
             stopSim.setFocusPainted(false);
             add(startSim);
             add(stopSim);
+            startSim.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
+                    AStar aStar = new AStar();
+                    Cell end = aStar.findPath(grid);
+                    Stack<Cell> stackPath = new Stack<>();
+                    while(end != null){
+                        stackPath.push(end);
+                        end = end.getParent();
+                    }
+
+                    while(!stackPath.isEmpty()){
+                        grid.setPath(stackPath.pop());
+                    }
+
+                }
+            });
+
+            stopSim.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
+                    System.out.println("lol2");
+                }
+            });
         }
-//
-//        @Override
-//        public Dimension getPreferredSize() {
-//            return new Dimension(50, 200);
-//        }
     }
 
     public class GridPanel extends JPanel {
@@ -58,15 +88,13 @@ public class TestGrid01 {
         private int columnCount = 25;
         private int rowCount = 25;
 
-        private List<Rectangle> cells;
         private Point selectedCell;
         private MouseState mouseState = MouseState.NO_BUTTON;
         private ProgramState programState = ProgramState.ADD_START;
         private Grid grid;
 
-        public GridPanel() {
-            cells = new ArrayList<>(columnCount * rowCount);
-            grid = new Grid(columnCount, rowCount);
+        public GridPanel(Grid grid) {
+            this.grid = grid;
             MouseAdapter mouseHandler;
             mouseHandler = new MouseAdapter() {
                 @Override

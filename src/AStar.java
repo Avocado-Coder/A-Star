@@ -14,7 +14,9 @@ public class AStar {
         closed = new ArrayList<>();
     }
 
-    public Cell findPath(Grid grid, Cell start, Cell end){
+    public Cell findPath(Grid grid){
+        Cell start = grid.getStart();
+        Cell end = grid.getEnd();
         open.add(start);
         //while lowest rank in open not goal
         while(open.peek() != end){

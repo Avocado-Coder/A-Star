@@ -8,6 +8,7 @@ public class TestAlgo {
         grid.setObstacle(16);
         grid.setObstacle(20);
         AStar aStar = new AStar();
-        Cell end = aStar.findPath(grid, grid.getCell(0,0), grid.getCell(4,4));
+        Cell end = aStar.findPath(grid);
+        System.out.println("lol");
     }
 }

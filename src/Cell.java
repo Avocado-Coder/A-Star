@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class Cell {
     public enum State {
-        EMPTY(1), START(0), END(0), OBSTACLE(Integer.MAX_VALUE);
+        EMPTY(1), START(1), END(1), PATH(1), OBSTACLE(Integer.MAX_VALUE);
         private int cost;
 
         State(int cost) {
