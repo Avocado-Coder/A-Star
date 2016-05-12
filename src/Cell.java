@@ -16,7 +16,7 @@ public class Cell {
         }
     }
     private State state;
-    private Rectangle rectangle;
+    private Rectangle rectangle;  //co-ordinates for swing GUI
     private int column;
     private int row;
     private double g;  // g is distance from the source

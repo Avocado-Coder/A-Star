@@ -14,8 +14,6 @@ public class SwingVisual {
 
     public enum MouseState {NO_BUTTON, LEFT_BUTTON, RIGHT_BUTTON, MIDDLE_BUTTON}
 
-    public enum ProgramState {ADD_START, ADD_END, ADD_OBSTACLES, PATH_FINDING}
-
     public SwingVisual() {
         EventQueue.invokeLater(new Runnable() {
             @Override
@@ -32,7 +30,6 @@ public class SwingVisual {
                 frame.setLayout(new BorderLayout());
                 JPanel gridPanel = new GridPanel(grid);
                 frame.add(gridPanel, BorderLayout.NORTH);
-//                gridPanel.paintComponents();
                 frame.add(new ButtonPanel(grid, gridPanel), BorderLayout.SOUTH);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
@@ -44,9 +41,9 @@ public class SwingVisual {
 
     public class ButtonPanel extends JPanel{
         public ButtonPanel(Grid grid, JPanel gridPanel){
-            JButton startSim = new JButton("Start Simulation");
+            JButton startSim = new JButton("Create Path");
             startSim.setFocusPainted(false);
-            JButton stopSim = new JButton("Stop Simulation");
+            JButton stopSim = new JButton("Clear Path");
             stopSim.setFocusPainted(false);
             add(startSim);
             add(stopSim);
@@ -66,7 +63,6 @@ public class SwingVisual {
                     while(!stackPath.isEmpty()){
                         grid.setPath(stackPath.pop());
                     }
-//                    gridPanel.revalidate();
                     gridPanel.repaint();
                 }
             });
@@ -75,7 +71,8 @@ public class SwingVisual {
             {
                 public void actionPerformed(ActionEvent e)
                 {
-                    System.out.println("lol2");
+                    grid.resetPath();
+                    gridPanel.repaint();
                 }
             });
         }
@@ -88,7 +85,6 @@ public class SwingVisual {
 
         private Point selectedCell;
         private MouseState mouseState = MouseState.NO_BUTTON;
-        private ProgramState programState = ProgramState.ADD_START;
         private Grid grid;
 
         public GridPanel(Grid grid) {
@@ -144,7 +140,7 @@ public class SwingVisual {
             return new Dimension(800, 800);
         }
 
-        //I don't know when this function is called...seems like it's called when resize is happening
+        //draw new rectangles when resized
         @Override
         public void invalidate() {
             grid.clearRectangles();

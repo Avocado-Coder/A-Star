@@ -24,6 +24,5 @@ public class TestAlgo {
             System.out.println("Cell: " + i + "(" + popped.getColumn() + "," + popped.getRow() + ")");
             System.out.println(popped.getF());
         }
-        System.out.println("lol");
     }
 }

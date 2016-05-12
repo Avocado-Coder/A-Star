@@ -12,7 +12,7 @@ public class Grid {
     private Cell end;
     private Cell path;
 
-    //default number of columns and rows is 5
+    //default number of columns and rows is 25
     Grid(){
         this.columns = 25;
         this.rows = 25;
@@ -38,7 +38,7 @@ public class Grid {
         }
     }
 
-    private void resetPath(){
+    public void resetPath(){
         for(int row = 0; row < rows; row++){
             for(int col = 0; col< columns; col++){
                 int index = col + (row * columns);
@@ -88,9 +88,9 @@ public class Grid {
         end = newEnd;
     }
 
+    //obstacle are toggled on/off.  Obstacles cannot be created in Start/End cells
     public void setObstacle(int index){
         Cell cell = grid.get(index);
-        //cannot set obstacle to start and end
         if(cell.getState() == Cell.State.EMPTY){
             cell.setState(Cell.State.OBSTACLE);
             return;
@@ -112,6 +112,7 @@ public class Grid {
         }
     }
 
+    //every time an action happens, cells are repainted
     public void fillCells(Graphics2D g2d){
         for(Cell cell : grid){
             if(cell.getState() == Cell.State.START){
