@@ -19,6 +19,7 @@ public class AStar {
         //while lowest rank in open not goal
         while(open.peek() != end){
             Cell current = open.poll();
+            current.setG(0D);
             closed.add(current);
             int column = current.getColumn();
             int row = current.getRow();
@@ -49,6 +50,7 @@ public class AStar {
         }
         if(closed.contains(neighbour) && cost < neighbour.getG()){
             closed.remove(neighbour);
+            return;
         }
         if(!open.contains(neighbour) && !closed.contains(neighbour)){
             neighbour.setG(cost);
