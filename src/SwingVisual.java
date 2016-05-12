@@ -1,16 +1,10 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Stack;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import javax.swing.*;
 
 public class SwingVisual {
 
@@ -36,8 +30,10 @@ public class SwingVisual {
                 JFrame frame = new JFrame("Testing");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLayout(new BorderLayout());
-                frame.add(new GridPanel(grid), BorderLayout.NORTH);
-                frame.add(new ButtonPanel(grid), BorderLayout.SOUTH);
+                JPanel gridPanel = new GridPanel(grid);
+                frame.add(gridPanel, BorderLayout.NORTH);
+//                gridPanel.paintComponents();
+                frame.add(new ButtonPanel(grid, gridPanel), BorderLayout.SOUTH);
                 frame.pack();
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
@@ -47,7 +43,7 @@ public class SwingVisual {
     }
 
     public class ButtonPanel extends JPanel{
-        public ButtonPanel(Grid grid){
+        public ButtonPanel(Grid grid, JPanel gridPanel){
             JButton startSim = new JButton("Start Simulation");
             startSim.setFocusPainted(false);
             JButton stopSim = new JButton("Stop Simulation");
@@ -61,6 +57,7 @@ public class SwingVisual {
                     AStar aStar = new AStar();
                     Cell end = aStar.findPath(grid);
                     Stack<Cell> stackPath = new Stack<>();
+                    end = end.getParent();
                     while(end != grid.getStart()){
                         stackPath.push(end);
                         end = end.getParent();
@@ -69,7 +66,8 @@ public class SwingVisual {
                     while(!stackPath.isEmpty()){
                         grid.setPath(stackPath.pop());
                     }
-
+//                    gridPanel.revalidate();
+                    gridPanel.repaint();
                 }
             });
 

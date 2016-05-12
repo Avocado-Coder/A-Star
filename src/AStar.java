@@ -42,8 +42,6 @@ public class AStar {
     }
 
     private void analyzeNeighbour(Cell current, Cell neighbour, Cell start, Cell end){
-//        double dx = Math.abs(neighbour.getRow() - start.getRow());
-//        double dy = Math.abs(neighbour.getColumn() - start.getColumn());
         Double cost = current.getG() + neighbour.getState().getCost();
         //remove existing neighbour that sucks and replace with better path
         if(open.contains(neighbour) && cost < neighbour.getG()){
@@ -51,13 +49,12 @@ public class AStar {
         }
         if(closed.contains(neighbour) && cost < neighbour.getG()){
             closed.remove(neighbour);
-//            return;
         }
         if(!open.contains(neighbour) && !closed.contains(neighbour)){
             neighbour.setG(cost);
             int dxEnd = Math.abs(neighbour.getRow() - end.getRow());
             int dyEnd = Math.abs(neighbour.getColumn() - end.getColumn());
-//            neighbour.setH(Math.sqrt(Math.pow(dxEnd, 2) + Math.pow(dyEnd,2)));
+            //multiplying by 1.001 to prevent ties
             neighbour.setH((dxEnd + dyEnd)*1.001);
             neighbour.setF(neighbour.getH() + neighbour.getG());
 

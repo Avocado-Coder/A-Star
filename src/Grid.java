@@ -38,6 +38,18 @@ public class Grid {
         }
     }
 
+    private void resetPath(){
+        for(int row = 0; row < rows; row++){
+            for(int col = 0; col< columns; col++){
+                int index = col + (row * columns);
+                Cell cell = grid.get(index);
+                if(cell.getState() == Cell.State.PATH){
+                    cell.setState(Cell.State.EMPTY);
+                }
+            }
+        }
+    }
+
     public void initRectangle(int cellWidth, int cellHeight, int xOffset, int yOffset){
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
@@ -57,6 +69,7 @@ public class Grid {
     }
 
     public void setStart(int index){
+        resetPath();
         if(start != null){
             this.getStart().setState(Cell.State.EMPTY);
         }
@@ -66,6 +79,7 @@ public class Grid {
     }
 
     public void setEnd(int index){
+        resetPath();
         if(end != null){
             this.getEnd().setState(Cell.State.EMPTY);
         }
@@ -75,7 +89,16 @@ public class Grid {
     }
 
     public void setObstacle(int index){
-        grid.get(index).setState(Cell.State.OBSTACLE);
+        Cell cell = grid.get(index);
+        //cannot set obstacle to start and end
+        if(cell.getState() == Cell.State.EMPTY){
+            cell.setState(Cell.State.OBSTACLE);
+            return;
+        }
+        if(cell.getState() == Cell.State.OBSTACLE){
+            cell.setState(Cell.State.EMPTY);
+            return;
+        }
     }
 
     public Cell getCell(int row, int col){
