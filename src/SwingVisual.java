@@ -9,12 +9,12 @@ import java.util.Stack;
 public class SwingVisual {
 
     public static void main(String[] args) {
-        new SwingVisual();
+        new SwingVisual(args);
     }
 
     public enum MouseState {NO_BUTTON, LEFT_BUTTON, RIGHT_BUTTON, MIDDLE_BUTTON}
 
-    public SwingVisual() {
+    public SwingVisual(String[]args) {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -23,7 +23,12 @@ public class SwingVisual {
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 }
 
-                Grid grid = new Grid();
+                Grid grid;
+                if(args.length == 2){
+                    grid = new Grid(Integer.valueOf(args[1]), Integer.valueOf(args[0]));
+                }else{
+                    grid = new Grid();
+                }
 
                 JFrame frame = new JFrame("Testing");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -89,6 +94,8 @@ public class SwingVisual {
 
         public GridPanel(Grid grid) {
             this.grid = grid;
+            this.columnCount = grid.getColumns();
+            this.rowCount = grid.getRows();
             MouseAdapter mouseHandler;
             mouseHandler = new MouseAdapter() {
                 @Override
